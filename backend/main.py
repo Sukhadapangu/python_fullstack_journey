@@ -1,7 +1,23 @@
-def greet(name):
-    return f"Hello, {name}!"
+from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import List, Optional
+
+app = FastAPI()
 
 
-if __name__ == "__main__":
-    message = greet("World")
-    print(message)
+class User(BaseModel):
+    user_id: int
+    username: str
+    email: str
+    is_active: bool = True
+    tags: List[str] = []
+    phone_number: Optional[str] = None
+    role: str = "viewer"
+
+
+@app.post("/users/")
+async def create_user(user: User):
+
+    print(f"Received user: {user.username}")
+
+    return {"message": "User created successfully!", "user_data": user}
